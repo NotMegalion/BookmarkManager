@@ -5,12 +5,26 @@
     <script type="text/javascript" src="/js/popup.js"></script>
     <style>
       html{width:250px;height:250px} ul{list-style-type:none;}
+      li{
+        text-align: left;
+	       color:blue;
+       }
+       li:hover
+       {
+	        text-decoration:underline;
+          background-color: lightgrey;
+        }
+      li p:hover
+      {
+	       text-decoration:underline;
+       }
     </style>
   </head>
   <body>
     <input id="bookmark-input" style="width:100px" type="text" value="";>
     </input>
     <button id="add-bookmark"><a>Add Bookmark</a></button>
+    <button id="search-bookmark"><a>Search Bookmark</a></button>
     <button id="list-bookmark"><a>Update Bookmark</a></button>
     <ul id="bookmark-list">
     </ul>

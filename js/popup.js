@@ -1,11 +1,12 @@
 $(document).ready(function()
 {
+  //window.bookmarks = [];
   console.log("loaded.");
   printBookmarks('0');
-
-
-  //chrome.bookmarks.getTree(function(e){window.tree = e; $("body").html()})
   $("#add-bookmark").click(function()
+  /*document.getElementById("bookmark-input").onkeyup = function(){
+    searchBookmarks('0', $("#bookmark-input").val());
+  }*/
   {
     var value = $("#bookmark-input").val(),
         substring = "https://",
@@ -14,13 +15,13 @@ $(document).ready(function()
     chrome.bookmarks.create({title: value, url: value});
     $("#bookmark-list").empty();
     printBookmarks('0');
-document.geti("bookmark-input").reset();
+    document.geti("bookmark-input").reset();
   }
   else{
     chrome.bookmarks.create({title: value, url: substring+value});
     $("#bookmark-list").empty();
     printBookmarks('0');
-document.geti("bookmark-input").reset();
+    document.geti("bookmark-input").reset();
   }
 
   });
@@ -28,13 +29,21 @@ document.geti("bookmark-input").reset();
     $("#bookmark-list").empty();
     printBookmarks('0');
   });
+  $("#search-bookmark").click(function(){
+    var searchVal = $("#bookmark-input").val();
+    $("#bookmark-list").empty();
+    searchBookmarks('0', searchVal);
+  });
+
   function printBookmarks(id) {
    chrome.bookmarks.getChildren(id, function(children) {
       children.forEach(function(bookmark) {
         console.log(bookmark.title);
+        //window.bookmarks.push(bookmark.title);
+        //console.log(window.bookmarks);
         var id = $("#bookmark-list").children().length;
         var bookmarkLocal = bookmark;
-        $("#bookmark-list").append("<li id='"+id+"'>"+bookmark.title+"<p id='x"+id+"' style='color:red; display: inline-block; margin:0px; margin-left:5px;'>X</p></li>");
+        $("#bookmark-list").append("<li id='"+id+"'>"+bookmark.title+"<button id='x"+id+"' style='color:red; position: absolute; float: right; font-size:10px; display: inline-block; margin:0px; margin-left:5px;'>x</button></li>");
         $("#"+id).click(function(e){
           if (e.target !== this)
             return;
@@ -48,6 +57,20 @@ document.geti("bookmark-input").reset();
         printBookmarks(bookmark.id);
       });
    });
+  }
+
+  function searchBookmarks(id, str){
+    chrome.bookmarks.getChildren(id, function(children){
+      children.forEach(function(bookmark){
+        if(bookmark.title.indexOf(str) >= 0){
+          console.log(bookmark.title);
+          console.log($("#bookmark-list"));
+         $("#bookmark-list").append("<li id='"+id+"'>"+bookmark.title+"<button id='x"+id+"' style='color:red; position: absolute; float: right; font-size:10px; display: inline-block; margin:0px; margin-left:5px;'>x</button></li>");
+        }
+        searchBookmarks(bookmark.id, str);
+      });
+    });
+
   }
 
 });
